@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 @SuppressWarnings("WeakerAccess")
 public class Cutter {
 
-    private final int[] range;
+    public final int[] range;
 
     public Cutter(String range){
         this.range = range(range);
@@ -14,20 +14,26 @@ public class Cutter {
 
     private int[] range(String range){
         int type;
-        if (range.charAt(0) == '-') {type = 0;}
-        else if (range.charAt(range.length() - 1) == '-') {type = 1;}
+        String newRange = range.replace("\\","").replace("/","");
+        if (newRange.charAt(0) == '-') {type = 0;}
+        else if (newRange.charAt(newRange.length() - 1) == '-') {type = 1;}
         else {type = 2;}
 
         int N = 0;
         int K = 0;
 
         switch (type) {
-            case 0 -> K = Integer.parseInt(range.substring(1));
-            case 1 -> N = Integer.parseInt(range.substring(0, range.length() - 1));
+            case 0 -> K = Integer.parseInt(newRange.substring(1));
+            case 1 -> N = Integer.parseInt(newRange.substring(0, newRange.length() - 1));
             default -> {
-                String[] nums = range.split("-");
+                String[] nums = newRange.split("-");
                 N = Integer.parseInt(nums[0]);
                 K = Integer.parseInt(nums[1]);
+                if (N > K) {
+                    int a = N;
+                    N = K;
+                    K = a;
+                }
             }
         }
 
@@ -86,12 +92,12 @@ public class Cutter {
                 String[] lines = text.toString().split("\n");
                 for (String line : lines){
                     StringBuilder newLine = new StringBuilder();
-                    String[] words = line.split(" ");
+                    String[] words = (" " + line).split(" ");
                     switch (range[0]) {
                         case 0 -> {for (int i = 0; i < words.length; i++) {
                             newLine.append(words[i]);
                             newLine.append(" ");
-                            if (i == range[2] - 1) break;
+                            if (i == range[2]) break;
                         }
                         }
                         case 1 -> {if (range[1] > words.length) break;
@@ -104,7 +110,7 @@ public class Cutter {
                             for (int i = range[1] - 1; i < words.length; i++) {
                                 newLine.append(words[i]);
                                 newLine.append(" ");
-                                if (i == range[2] - 1) break;
+                                if (i == range[2]) break;
                             }
                         }
                     }

@@ -20,14 +20,11 @@ public class CutterLauncher {
     @Option(name = "-o", metaVar = "OutputName", usage = "Output file name")
     private String outputFileName;
 
-    @Argument(metaVar = "InputName", usage = "Input file name")
+    @Argument(metaVar = "InputName",required = true, usage = "Input file name")
     private String inputFileName;
 
     @Argument(metaVar = "Range", required = true, index = 1, usage = "Range of cut piece")
     private String range;
-
-    public CutterLauncher() {
-    }
 
     public static void main(String[] args) {
         new CutterLauncher().launch(args);
@@ -62,7 +59,7 @@ public class CutterLauncher {
             Cutter cutter = new Cutter(range);
 
             try {
-                if (inputFileName != null && outputFileName != null) {
+                if (!Objects.equals(inputFileName, "console") && outputFileName != null) {
                     if (Objects.equals(flag, 'c')){
                         cutter.cutChar(inputFileName, outputFileName);
                     }
@@ -71,11 +68,10 @@ public class CutterLauncher {
                     }
                     System.out.println("Successful cut");
                 } else {
-                    if (inputFileName == null && outputFileName != null){
-                        System.out.println("2");
+                    if (Objects.equals(inputFileName, "console") && outputFileName != null){
                         Scanner scanner = new Scanner(System.in);
                         System.out.print("Enter path to your input file: ");
-                        String text = scanner.next();
+                        String text = scanner.nextLine();
                         if (Objects.equals(flag, 'c')){
                             cutter.cutChar(text, outputFileName);
                         }
@@ -83,8 +79,7 @@ public class CutterLauncher {
                             cutter.cutWord(text, outputFileName);
                         }
                         System.out.println("Successful cut");
-                    } else if (inputFileName != null){
-                        System.out.println("3");
+                    } else if (!Objects.equals(inputFileName, "console")){
                         if (Objects.equals(flag, 'c')){
                             cutter.cutChar(inputFileName);
                         }
@@ -92,10 +87,9 @@ public class CutterLauncher {
                             cutter.cutWord(inputFileName);
                         }
                     } else {
-                        System.out.println("4");
                         Scanner scanner = new Scanner(System.in);
                         System.out.print("Enter path to your input file: ");
-                        String text = scanner.next();
+                        String text = scanner.nextLine();
                         if (Objects.equals(flag, 'c')){
                             cutter.cutChar(text);
                         }
@@ -104,9 +98,6 @@ public class CutterLauncher {
                         }
                     }
                 }
-
-
-
 
             } catch (IOException e) {
                 System.err.println(e.getMessage());
