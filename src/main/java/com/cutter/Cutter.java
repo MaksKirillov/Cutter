@@ -7,39 +7,12 @@ import java.nio.charset.StandardCharsets;
 public class Cutter {
 
     public final int[] range;
+    public final char flag;
 
-    public Cutter(String range){
-        this.range = range(range);
-    }
-
-    private int[] range(String range){
-        int type;
-        String newRange = range.replace("\\","").replace("/","");
-        if (newRange.charAt(0) == '-') {type = 0;}
-        else if (newRange.charAt(newRange.length() - 1) == '-') {type = 1;}
-        else {type = 2;}
-
-        int N = 0;
-        int K = 0;
-
-        switch (type) {
-            case 0 -> K = Integer.parseInt(newRange.substring(1));
-            case 1 -> N = Integer.parseInt(newRange.substring(0, newRange.length() - 1));
-            default -> {
-                String[] nums = newRange.split("-");
-                N = Integer.parseInt(nums[0]);
-                K = Integer.parseInt(nums[1]);
-                if (N > K) {
-                    int a = N;
-                    N = K;
-                    K = a;
-                }
-            }
-        }
-
-        if (N == 0) N = 1;
-
-        return new int[] {type, N, K};
+    public Cutter(String range, char flag){
+        Type type = new Type(range);
+        this.range = type.range;
+        this.flag = flag;
     }
 
         public void cutChar(InputStream in, OutputStream out) throws IOException{
@@ -122,31 +95,51 @@ public class Cutter {
         }
     }
 
-    public void cutChar(String inputName, String outputName) throws IOException {
+    public void cut(String inputName, String outputName) throws IOException {
         try (FileInputStream inputStream = new FileInputStream(inputName)) {
             try (FileOutputStream outputStream = new FileOutputStream(outputName)) {
-                cutChar(inputStream, outputStream);
+                if (flag == 'c'){
+                    cutChar(inputStream, outputStream);
+                }
+                if (flag == 'w'){
+                    cutWord(inputStream, outputStream);
+                }
             }
         }
     }
 
-    public void cutWord(String inputName, String outputName) throws IOException {
+    public void cut(String inputName) throws IOException {
         try (FileInputStream inputStream = new FileInputStream(inputName)) {
-            try (FileOutputStream outputStream = new FileOutputStream(outputName)) {
-                cutWord(inputStream, outputStream);
-            }
-        }
-    }
-
-    public void cutChar(String inputName) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(inputName)) {
+            if (flag == 'c'){
                 cutChar(inputStream, System.out);
+            }
+            if (flag == 'w'){
+                cutWord(inputStream, System.out);
+            }
         }
     }
 
-    public void cutWord(String inputName) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(inputName)) {
+    public void cutConsoleInput(String input, String outputName) throws IOException {
+        try (InputStream inputStream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))) {
+            try (FileOutputStream outputStream = new FileOutputStream(outputName)) {
+                if (flag == 'c'){
+                    cutChar(inputStream, outputStream);
+                }
+                if (flag == 'w'){
+                    cutWord(inputStream, outputStream);
+                }
+            }
+        }
+    }
+
+    public void cutConsoleInput(String input) throws IOException {
+        try (InputStream inputStream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))) {
+            if (flag == 'c'){
+                cutChar(inputStream, System.out);
+            }
+            if (flag == 'w'){
                 cutWord(inputStream, System.out);
+            }
         }
     }
 }

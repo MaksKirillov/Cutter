@@ -8,44 +8,10 @@ import java.io.*;
 public class CutterTest {
 
     @Test
-    public void range(){
-        Cutter cut1 = new Cutter("\\-2");
-        int[] expected1 = new int[] {0, 1, 2};
-        for (int i = 0; i < expected1.length; i++) {
-            Assert.assertEquals(cut1.range[i], expected1[i]);
-        }
-
-        Cutter cut2 = new Cutter("-4");
-        int[] expected2 = new int[] {0, 1, 4};
-        for (int i = 0; i < expected1.length; i++) {
-            Assert.assertEquals(cut2.range[i], expected2[i]);
-        }
-
-        Cutter cut3 = new Cutter("3-");
-        int[] expected3 = new int[] {1, 3, 0};
-        for (int i = 0; i < expected1.length; i++) {
-            Assert.assertEquals(cut3.range[i], expected3[i]);
-        }
-
-        Cutter cut4 = new Cutter("3-7");
-        int[] expected4 = new int[] {2, 3, 7};
-        for (int i = 0; i < expected1.length; i++) {
-            Assert.assertEquals(cut4.range[i], expected4[i]);
-        }
-
-        Cutter cut5 = new Cutter("10-3");
-        int[] expected5 = new int[] {2, 3, 10};
-        for (int i = 0; i < expected1.length; i++) {
-            Assert.assertEquals(cut5.range[i], expected5[i]);
-        }
-
-    }
-
-    @Test
     public void cutChar1() throws IOException {
-        FileInputStream input = new FileInputStream("src\\test\\java\\com\\cutter\\input.txt");
-        FileOutputStream output = new FileOutputStream("src\\test\\java\\com\\cutter\\output.txt");
-        Cutter cut = new Cutter("-4");
+        FileInputStream input = new FileInputStream("files\\input.txt");
+        FileOutputStream output = new FileOutputStream("files\\output.txt");
+        Cutter cut = new Cutter("-4", 'c');
         cut.cutChar(input, output);
         String expected = """
                 1234
@@ -57,7 +23,7 @@ public class CutterTest {
                 123\s
                 12 1
                 1 12""";
-        FileReader reader = new FileReader("src\\test\\java\\com\\cutter\\output.txt");
+        FileReader reader = new FileReader("files\\output.txt");
         int c;
         StringBuilder actual = new StringBuilder();
         while ((c = reader.read()) != -1) {
@@ -68,9 +34,9 @@ public class CutterTest {
 
     @Test
     public void cutChar2() throws IOException {
-        FileInputStream input = new FileInputStream("src\\test\\java\\com\\cutter\\input.txt");
-        FileOutputStream output = new FileOutputStream("src\\test\\java\\com\\cutter\\output.txt");
-        Cutter cut = new Cutter("4-8");
+        FileInputStream input = new FileInputStream("files\\input.txt");
+        FileOutputStream output = new FileOutputStream("files\\output.txt");
+        Cutter cut = new Cutter("4-8", 'c');
         cut.cutChar(input, output);
         String expected = """
                 45678
@@ -82,7 +48,7 @@ public class CutterTest {
                  1234
                 12345
                 23456""";
-        FileReader reader = new FileReader("src\\test\\java\\com\\cutter\\output.txt");
+        FileReader reader = new FileReader("files\\output.txt");
         int c;
         StringBuilder actual = new StringBuilder();
         while ((c = reader.read()) != -1) {
@@ -93,9 +59,9 @@ public class CutterTest {
 
     @Test
     public void cutWord1() throws IOException {
-        FileInputStream input = new FileInputStream("src\\test\\java\\com\\cutter\\input.txt");
-        FileOutputStream output = new FileOutputStream("src\\test\\java\\com\\cutter\\output.txt");
-        Cutter cut = new Cutter("-2");
+        FileInputStream input = new FileInputStream("files\\input.txt");
+        FileOutputStream output = new FileOutputStream("files\\output.txt");
+        Cutter cut = new Cutter("-2", 'w');
         cut.cutWord(input, output);
         String expected = """
                 123456789 1
@@ -107,7 +73,7 @@ public class CutterTest {
                 123 1234567
                 12 12345678
                 1 123456789""";
-        FileReader reader = new FileReader("src\\test\\java\\com\\cutter\\output.txt");
+        FileReader reader = new FileReader("files\\output.txt");
         int c;
         StringBuilder actual = new StringBuilder();
         while ((c = reader.read()) != -1) {
@@ -118,9 +84,9 @@ public class CutterTest {
 
     @Test
     public void cutWord2() throws IOException {
-        FileInputStream input = new FileInputStream("src\\test\\java\\com\\cutter\\input.txt");
-        FileOutputStream output = new FileOutputStream("src\\test\\java\\com\\cutter\\output.txt");
-        Cutter cut = new Cutter("2-3");
+        FileInputStream input = new FileInputStream("files\\input.txt");
+        FileOutputStream output = new FileOutputStream("files\\output.txt");
+        Cutter cut = new Cutter("2-3", 'w');
         cut.cutWord(input, output);
         String expected = """
                 123456789 1 12
@@ -132,7 +98,7 @@ public class CutterTest {
                 123 1234567 12
                 12 12345678 12
                 1 123456789""";
-        FileReader reader = new FileReader("src\\test\\java\\com\\cutter\\output.txt");
+        FileReader reader = new FileReader("files\\output.txt");
         int c;
         StringBuilder actual = new StringBuilder();
         while ((c = reader.read()) != -1) {

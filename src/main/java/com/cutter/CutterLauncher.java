@@ -6,25 +6,24 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class CutterLauncher {
 
-    @Option(name = "-w", metaVar = "FlagWord", usage = "Flag [-w], count words, only one can be used")
+    @Option(name = "-w", forbids = {"-c"}, metaVar = "FlagWord", usage = "Flag [-w], count words, only one can be used")
     private boolean flagWord;
 
-    @Option(name = "-c", metaVar = "FlagChar", usage = "Flag [-c], count characters, only one can be used")
+    @Option(name = "-c", forbids = {"-w"}, metaVar = "FlagChar", usage = "Flag [-c], count characters, only one can be used")
     private boolean flagChar;
+
+    @Option(name = "-r", metaVar = "Range", required = true, usage = "Range of cut piece")
+    private String range;
 
     @Option(name = "-o", metaVar = "OutputName", usage = "Output file name")
     private String outputFileName;
 
-    @Argument(metaVar = "InputName",required = true, usage = "Input file name")
+    @Argument(metaVar = "InputName", usage = "Input file name")
     private String inputFileName;
-
-    @Argument(metaVar = "Range", required = true, index = 1, usage = "Range of cut piece")
-    private String range;
 
     public static void main(String[] args) {
         new CutterLauncher().launch(args);
@@ -37,17 +36,14 @@ public class CutterLauncher {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            System.err.println("java -jar Cutter.jar [-c|-w] [-o ofile] [file] range");
+            System.err.println("java -jar Cutter.jar [-c|-w] [-r range] [-o output file] [file]");
             parser.printUsage(System.err);
             return;
         }
 
         if (!flagChar && !flagWord) {
             System.out.println("No flag found");
-        } else if (flagChar && flagWord) {
-            System.out.println("Two flags found");
-        }
-        else {
+        } else {
             char flag;
 
             if (flagChar) {
@@ -56,46 +52,32 @@ public class CutterLauncher {
                 flag = 'w';
             }
 
-            Cutter cutter = new Cutter(range);
+            Cutter cutter = new Cutter(range, flag);
 
             try {
-                if (!Objects.equals(inputFileName, "console") && outputFileName != null) {
-                    if (Objects.equals(flag, 'c')){
-                        cutter.cutChar(inputFileName, outputFileName);
-                    }
-                    if (Objects.equals(flag, 'w')){
-                        cutter.cutWord(inputFileName, outputFileName);
-                    }
+                if (inputFileName != null && outputFileName != null) {
+                    cutter.cut(inputFileName, outputFileName);
                     System.out.println("Successful cut");
                 } else {
-                    if (Objects.equals(inputFileName, "console") && outputFileName != null){
+                    if (inputFileName == null){
                         Scanner scanner = new Scanner(System.in);
-                        System.out.print("Enter path to your input file: ");
-                        String text = scanner.nextLine();
-                        if (Objects.equals(flag, 'c')){
-                            cutter.cutChar(text, outputFileName);
+                        System.out.println("Enter your text (Type \"EOF\" to end it): ");
+                        String line = scanner.nextLine();
+                        StringBuilder text = new StringBuilder();
+
+                        while (scanner.hasNext() && !line.contains("EOF")) {
+                            text.append(line).append("\n");
+                            line = scanner.nextLine();
+                            if (line.contains("EOF")) break;
                         }
-                        if (Objects.equals(flag, 'w')){
-                            cutter.cutWord(text, outputFileName);
-                        }
-                        System.out.println("Successful cut");
-                    } else if (!Objects.equals(inputFileName, "console")){
-                        if (Objects.equals(flag, 'c')){
-                            cutter.cutChar(inputFileName);
-                        }
-                        if (Objects.equals(flag, 'w')){
-                            cutter.cutWord(inputFileName);
+                        if (outputFileName != null) {
+                            cutter.cutConsoleInput(text.toString(), outputFileName);
+                            System.out.println("Successful cut");
+                        } else {
+                            cutter.cutConsoleInput(text.toString());
                         }
                     } else {
-                        Scanner scanner = new Scanner(System.in);
-                        System.out.print("Enter path to your input file: ");
-                        String text = scanner.nextLine();
-                        if (Objects.equals(flag, 'c')){
-                            cutter.cutChar(text);
-                        }
-                        if (Objects.equals(flag, 'w')){
-                            cutter.cutWord(text);
-                        }
+                        cutter.cut(inputFileName);
                     }
                 }
 
