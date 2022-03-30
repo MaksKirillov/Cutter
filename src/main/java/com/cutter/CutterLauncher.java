@@ -36,7 +36,7 @@ public class CutterLauncher {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            System.err.println("java -jar Cutter.jar [-c|-w] [-r range] [-o output file] [file]");
+            System.err.println("java -jar Cutter.jar [-c|-w] [-r range] [-o output file] [input file]");
             parser.printUsage(System.err);
             return;
         }
