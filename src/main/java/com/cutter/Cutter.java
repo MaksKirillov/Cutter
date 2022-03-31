@@ -3,6 +3,8 @@ package com.cutter;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+import static java.lang.Math.min;
+
 @SuppressWarnings("WeakerAccess")
 public class Cutter {
 
@@ -15,36 +17,26 @@ public class Cutter {
         this.flag = flag;
     }
 
-        public void cutChar(InputStream in, OutputStream out) throws IOException{
+    private String[] reader(InputStreamReader reader) throws IOException {
+        int c;
+        StringBuilder text = new StringBuilder();
+        while ((c = reader.read()) != -1) {
+            text.append((char) c);
+        }
+        return text.toString().split("\n");
+    }
+
+    public void cutChar(InputStream in, OutputStream out) throws IOException{
         try (InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
             try (OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
-                int c;
-                StringBuilder text = new StringBuilder();
-                while ((c = reader.read()) != -1) {
-                    text.append((char) c);
-                }
                 StringBuilder newText = new StringBuilder();
-                String[] lines = text.toString().split("\n");
+                String[] lines = reader(reader);
                 for (String line : lines){
                     StringBuilder newLine = new StringBuilder();
-                    char[] chars = line.toCharArray();
                     switch (range[0]) {
-                        case 0 -> {for (int i = 0; i < chars.length; i++) {
-                            newLine.append(chars[i]);
-                            if (i == range[2] - 1) break;
-                            }
-                        }
-                        case 1 -> {if (range[1] > chars.length) break;
-                            for (int i = range[1] - 1; i < chars.length; i++) {
-                                newLine.append(chars[i]);
-                            }
-                        }
-                        default -> {if (range[1] >= chars.length) break;
-                            for (int i = range[1] - 1; i < chars.length; i++) {
-                                newLine.append(chars[i]);
-                                if (i == range[2] - 1) break;
-                            }
-                        }
+                        case 0 -> newLine.append(line, 0, min(range[2], line.length()));
+                        case 1 -> newLine.append(line.substring(range[1] - 1));
+                        default -> newLine.append(line, range[1] - 1, min(range[2], line.length()));
                     }
                     newText.append(newLine).append("\n");
                 }
@@ -56,13 +48,8 @@ public class Cutter {
     public void cutWord(InputStream in, OutputStream out) throws IOException{
         try (InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
             try (OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
-                int c;
-                StringBuilder text = new StringBuilder();
-                while ((c = reader.read()) != -1) {
-                    text.append((char) c);
-                }
                 StringBuilder newText = new StringBuilder();
-                String[] lines = text.toString().split("\n");
+                String[] lines = reader(reader);
                 for (String line : lines){
                     StringBuilder newLine = new StringBuilder();
                     String[] words = (" " + line).split(" ");
