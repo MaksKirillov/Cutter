@@ -31,11 +31,11 @@ public class Cutter2 {
         this.outputType = false;
     }
 
-    public void setConsoleInput () {
+    public void setConsoleInput() {
         this.inputType = true;
     }
 
-    public void setConsoleOutput () {
+    public void setConsoleOutput() {
         this.outputType = true;
     }
 
