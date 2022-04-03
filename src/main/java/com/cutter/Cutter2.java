@@ -10,28 +10,36 @@ public class Cutter2 {
 
     public final int[] range;
     public final char flag;
-    public final boolean inputType; // false - file, true - console
-    public final boolean outputType; // false - file, true - console
+    public boolean inputType = true; // false - file, true - console
+    public boolean outputType = true; // false - file, true - console
     public String inputName;
     public String outputName;
 
-    public Cutter2(String range, char flag, boolean inputType, boolean outputType) {
+    public Cutter2(String range, char flag) {
         Type type = new Type(range);
         this.range = type.range;
         this.flag = flag;
-        this.inputType = inputType;
-        this.outputType = outputType;
     }
 
     public void setInputName(String inputName) {
         this.inputName = inputName;
+        this.inputType = false;
     }
 
     public void setOutputName(String outputName) {
         this.outputName = outputName;
+        this.outputType = false;
     }
 
-    private void launch() throws IOException {
+    public void setConsoleInput () {
+        this.inputType = true;
+    }
+
+    public void setConsoleOutput () {
+        this.outputType = true;
+    }
+
+    public void launch() throws IOException {
         if (!inputType) {
             try (FileInputStream reader = new FileInputStream(inputName)) {
                 int c;
