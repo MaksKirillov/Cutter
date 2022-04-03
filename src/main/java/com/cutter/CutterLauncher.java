@@ -59,7 +59,7 @@ public class CutterLauncher {
                     cutter.cut(inputFileName, outputFileName);
                     System.out.println("Successful cut");
                 } else {
-                    if (inputFileName == null){
+                    if (inputFileName == null) {
                         Scanner scanner = new Scanner(System.in);
                         System.out.println("Enter your text (Type \"EOF\" to end it): ");
                         String line = scanner.nextLine();
@@ -85,6 +85,6 @@ public class CutterLauncher {
                 System.err.println(e.getMessage());
             }
 
-            }
         }
     }
+}

@@ -1,22 +1,26 @@
 package com.cutter;
 
 /* Type 0 : -K
-*  Type 1 : N-
-*  Type 2 : N-K */
+ *  Type 1 : N-
+ *  Type 2 : N-K */
 
 public class Type {
 
     public final int[] range;
 
-    public Type(String range){
+    public Type(String range) {
         this.range = range(range);
     }
 
-    private int[] range(String range){
+    private int[] range(String range) {
         int type;
-        if (range.charAt(0) == '-') {type = 0;}
-        else if (range.charAt(range.length() - 1) == '-') {type = 1;}
-        else {type = 2;}
+        if (range.charAt(0) == '-') {
+            type = 0;
+        } else if (range.charAt(range.length() - 1) == '-') {
+            type = 1;
+        } else {
+            type = 2;
+        }
 
         int N = 0;
         int K = 0;
@@ -37,7 +41,7 @@ public class Type {
         }
 
         if (N == 0) N = 1;
-        return new int[] {type, N, K};
+        return new int[]{type, N, K};
     }
 
 }

@@ -11,7 +11,7 @@ public class Cutter {
     public final int[] range;
     public final char flag;
 
-    public Cutter(String range, char flag){
+    public Cutter(String range, char flag) {
         Type type = new Type(range);
         this.range = type.range;
         this.flag = flag;
@@ -26,12 +26,12 @@ public class Cutter {
         return text.toString().split("\n");
     }
 
-    public void cutChar(InputStream in, OutputStream out) throws IOException{
+    public void cutChar(InputStream in, OutputStream out) throws IOException {
         try (InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
             try (OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
                 StringBuilder newText = new StringBuilder();
                 String[] lines = reader(reader);
-                for (String line : lines){
+                for (String line : lines) {
                     StringBuilder newLine = new StringBuilder();
                     switch (range[0]) {
                         case 0 -> newLine.append(line, 0, min(range[2], line.length()));
@@ -45,28 +45,31 @@ public class Cutter {
         }
     }
 
-    public void cutWord(InputStream in, OutputStream out) throws IOException{
+    public void cutWord(InputStream in, OutputStream out) throws IOException {
         try (InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
             try (OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
                 StringBuilder newText = new StringBuilder();
                 String[] lines = reader(reader);
-                for (String line : lines){
+                for (String line : lines) {
                     StringBuilder newLine = new StringBuilder();
                     String[] words = (" " + line).split(" ");
                     switch (range[0]) {
-                        case 0 -> {for (int i = 0; i < words.length; i++) {
-                            newLine.append(words[i]);
-                            newLine.append(" ");
-                            if (i == range[2]) break;
+                        case 0 -> {
+                            for (int i = 0; i < words.length; i++) {
+                                newLine.append(words[i]);
+                                newLine.append(" ");
+                                if (i == range[2]) break;
+                            }
                         }
-                        }
-                        case 1 -> {if (range[1] > words.length) break;
+                        case 1 -> {
+                            if (range[1] > words.length) break;
                             for (int i = range[1] - 1; i < words.length; i++) {
                                 newLine.append(words[i]);
                                 newLine.append(" ");
                             }
                         }
-                        default -> {if (range[1] >= words.length) break;
+                        default -> {
+                            if (range[1] >= words.length) break;
                             for (int i = range[1] - 1; i < words.length; i++) {
                                 newLine.append(words[i]);
                                 newLine.append(" ");
@@ -85,10 +88,10 @@ public class Cutter {
     public void cut(String inputName, String outputName) throws IOException {
         try (FileInputStream inputStream = new FileInputStream(inputName)) {
             try (FileOutputStream outputStream = new FileOutputStream(outputName)) {
-                if (flag == 'c'){
+                if (flag == 'c') {
                     cutChar(inputStream, outputStream);
                 }
-                if (flag == 'w'){
+                if (flag == 'w') {
                     cutWord(inputStream, outputStream);
                 }
             }
@@ -97,10 +100,10 @@ public class Cutter {
 
     public void cut(String inputName) throws IOException {
         try (FileInputStream inputStream = new FileInputStream(inputName)) {
-            if (flag == 'c'){
+            if (flag == 'c') {
                 cutChar(inputStream, System.out);
             }
-            if (flag == 'w'){
+            if (flag == 'w') {
                 cutWord(inputStream, System.out);
             }
         }
@@ -109,10 +112,10 @@ public class Cutter {
     public void cutConsoleInput(String input, String outputName) throws IOException {
         try (InputStream inputStream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))) {
             try (FileOutputStream outputStream = new FileOutputStream(outputName)) {
-                if (flag == 'c'){
+                if (flag == 'c') {
                     cutChar(inputStream, outputStream);
                 }
-                if (flag == 'w'){
+                if (flag == 'w') {
                     cutWord(inputStream, outputStream);
                 }
             }
@@ -121,10 +124,10 @@ public class Cutter {
 
     public void cutConsoleInput(String input) throws IOException {
         try (InputStream inputStream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))) {
-            if (flag == 'c'){
+            if (flag == 'c') {
                 cutChar(inputStream, System.out);
             }
-            if (flag == 'w'){
+            if (flag == 'w') {
                 cutWord(inputStream, System.out);
             }
         }
